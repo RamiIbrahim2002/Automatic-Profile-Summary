@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Générateur de résumé de profil</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Profil</h1>
+    <form action="/generate" method="post">
+      <label>Nom
+        <input type="text" name="name" required>
+      </label>
+      <label>Expérience professionnelle
+        <textarea name="experience" required></textarea>
+      </label>
+      <label>Éducation
+        <textarea name="education" required></textarea>
+      </label>
+      <label>Compétences & langues
+        <textarea name="skills" required></textarea>
+      </label>
+      <label>Coordonnées
+        <input type="text" name="contact" required>
+      </label>
+      <button type="submit">Générer résumé</button>
+    </form>
+    <div id="result">
+      <!-- Le JSON renvoyé s’affichera ici -->
+    </div>
+  </div>
+  <script>
+    const form = document.querySelector('form');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const resp = await fetch('/generate', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await resp.json();
+      resultDiv.innerHTML = `
+        <h2>Résumé</h2>
+        <p>${data.summary}</p>
+        <h3>Raisonnement</h3>
+        <p>${data.reasoning}</p>
+        <h3>Tags suggérés</h3>
+        <ul>${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>
+      `;
+    });
+  </script>
+</body>
+</html>
