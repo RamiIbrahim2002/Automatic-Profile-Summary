@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <title>Générateur de résumé de profil</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
   <div class="container">
+    <form id="cvForm" enctype="multipart/form-data">
+      <input type="file" id="cvUpload" accept="image/*,.pdf">
+      <button type="button" onclick="processCV()">Scan CV</button>
+    </form>
     <h1>Profil</h1>
-    <form action="/generate" method="post">
+    <form id="profileForm">
       <label>Nom
         <input type="text" name="name" required>
       </label>
@@ -27,30 +33,98 @@
       <button type="submit">Générer résumé</button>
     </form>
     <div id="result">
-      <!-- Le JSON renvoyé s’affichera ici -->
+      <!-- Le JSON renvoyé s'affichera ici -->
     </div>
   </div>
   <script>
-    const form = document.querySelector('form');
-    const resultDiv = document.getElementById('result');
+    // Process CV form
+    async function processCV() {
+      const fileInput = document.getElementById('cvUpload');
+      if (!fileInput.files.length) return;
 
-    form.addEventListener('submit', async e => {
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        // Show loading state
+        const button = document.querySelector('#cvForm button');
+        button.disabled = true;
+        button.textContent = 'Traitement...';
+
+        const response = await fetch('/process-cv/', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+
+        // Auto-fill form fields
+        document.querySelector("#profileForm input[name='name']").value = data.name || '';
+        document.querySelector("#profileForm textarea[name='experience']").value = data.experience || '';
+        document.querySelector("#profileForm textarea[name='education']").value = data.education || '';
+        document.querySelector("#profileForm textarea[name='skills']").value = data.skills || '';
+        document.querySelector("#profileForm input[name='contact']").value = data.contact || '';
+
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById("result").innerHTML = `
+          <p class="error">Erreur lors du scan du CV: ${error.message}</p>
+        `;
+      } finally {
+        // Reset button state
+        const button = document.querySelector('#cvForm button');
+        button.disabled = false;
+        button.textContent = 'Scan CV';
+      }
+    }
+
+    // Profile form submission
+    document.getElementById("profileForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const formData = new FormData(form);
-      const resp = await fetch('/generate', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await resp.json();
-      resultDiv.innerHTML = `
-        <h2>Résumé</h2>
-        <p>${data.summary}</p>
-        <h3>Raisonnement</h3>
-        <p>${data.reasoning}</p>
-        <h3>Tags suggérés</h3>
-        <ul>${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>
-      `;
+
+      try {
+        // Show loading state
+        const button = this.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.textContent = 'Génération en cours...';
+
+        const formData = new FormData(this);
+        const response = await fetch('/generate', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const data = await response.json();
+
+        // Update the result div
+        document.getElementById("result").innerHTML = `
+          <h2>Résumé</h2>
+          <p>${data.summary}</p>
+          <h3>Raisonnement</h3>
+          <p>${data.reasoning}</p>
+          <h3>Tags suggérés</h3>
+          <ul>${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>
+        `;
+
+        // Scroll to results
+        document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById("result").innerHTML = `
+          <p class="error">Erreur lors de la génération: ${error.message}</p>
+        `;
+      } finally {
+        // Reset button state
+        const button = document.querySelector('#profileForm button[type="submit"]');
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Générer résumé';
+        }
+      }
     });
   </script>
 </body>
+
 </html>
