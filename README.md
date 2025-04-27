@@ -1,56 +1,43 @@
-# CV Genius - Professional Profile Generator
+# FastAPI Career Profile Generator
 
-![CV Genius Screenshot](static/screenshot.png)
+A modular FastAPI application that:
 
-CV Genius is a web application that helps professionals transform their CVs into optimized LinkedIn profiles with SEO-friendly summaries and keywords. The application uses AI-powered text extraction and analysis to generate professional profile content.
+- Parses uploaded CV files (PDF or image) into structured data using Tesseract OCR with Hugging Face fallback.
+- Generates a professional profile summary, reasoning, relevant tags, and SEO keywords via OpenAI’s structured JSON-Schema outputs.
+- Automatically validates the generated summary against a set of questions and retries if validation fails.
+
+## Pipeline
+![pipline](pipeline.png)
+
 
 ## Features
 
-- **CV Parsing**: Upload your CV (PDF or image) to automatically extract key information
-- **Profile Generation**: Create optimized LinkedIn profiles with professional summaries
-- **SEO Optimization**: Get recommended tags and keywords to improve profile visibility
-- **Contact Validation**: Ensures extracted contact information is properly formatted
-- **Responsive Design**: Works on both desktop and mobile devices
+- **CV Parsing**: Extract name, experience, education, skills, and contact information from PDF or image resumes.
+- **Profile Generation**: Create a clear summary, reasoning, tags, and SEO keywords using OpenAI’s preview client with JSON-Schema-based prompts.
+- **Automated Validation**: Ask the model to answer three yes/no questions about the generated summary; automatically retry generation up to 2 times if any check fails.
+- **Modular Codebase**: Clean separation of concerns across configuration, schemas, OCR utilities, and routers.
+- **Structured Responses**: All LLM outputs conform to explicit JSON Schemas and are validated by Pydantic models.
 
-## Technologies Used
+## Requirements
 
-- **Backend**:
-  - Python
-  - FastAPI (web framework)
-  - OpenAI API (text generation)
-  - Hugging Face (OCR fallback)
-  - Tesseract OCR (text extraction)
-  - PDF2Image (PDF processing)
-
-- **Frontend**:
-  - HTML5, CSS3, JavaScript
-  - Jinja2 Templates
-  - Responsive design with CSS Grid/Flexbox
+- Python 3.10+
+- Tesseract OCR installed (for local OCR)
+- A Hugging Face API token (for OCR fallback)
+- OpenAI preview client (`openai>=0.27.0`)
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.9+
-- Tesseract OCR installed on your system
-- Node.js (for optional frontend development)
-
-### Pipeline
-
-![pipeline](pipeline.png)
-
-### Setup
-
 1. Clone the repository:
    ```bash
-   git clone https://github.com/RamiIbrahim2002/R-sum--automatique-de-profil-avec-IA-dans-le-cadre-du-projet-TYBSync--3-.git
-   cd cv-genius
+   git clone https://github.com/yourusername/fastapi-career-app.git
+   cd fastapi-career-app
    ```
 
 2. Create and activate a virtual environment:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python -m venv .venv
+   source .venv/bin/activate     # Linux/macOS
+   .\.venv\Scripts\activate    # Windows
    ```
 
 3. Install dependencies:
@@ -58,93 +45,83 @@ CV Genius is a web application that helps professionals transform their CVs into
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables:
-   - Create a `.env` file in the root directory
-   - Add your API keys:
-     ```
-     OPENAI_API_KEY=your_openai_key
-     OPENAI_MODEL=gpt-3.5-turbo  # or your preferred model
-     ```
-
-5. Install Tesseract OCR:
-   - **Windows**: Download from [Tesseract installer](https://github.com/UB-Mannheim/tesseract/wiki)
-   - **Mac**: `brew install tesseract`
-   - **Linux**: `sudo apt install tesseract-ocr`
-
-## Usage
-
-1. Run the FastAPI server:
-   ```bash
-   uvicorn main:app --reload --port 8000
+4. Set up environment variables in a `.env` file:
+   ```env
+   OPENAI_API_KEY=your_openai_key
+   OPENAI_MODEL=gpt-4o-mini        # or another supported model
+   HF_API_TOKEN=your_huggingface_token
    ```
 
-2. Open your browser and navigate to:
-   ```
-   http://localhost:8000
-   ```
-
-3. Use the application:
-   - Upload your CV (PDF, JPG, or PNG)
-   - Review the extracted information
-   - Generate an optimized LinkedIn profile
-
-## API Endpoints
-
-- `POST /process-cv/`: Process uploaded CV file
-- `POST /generate`: Generate profile summary from form data
+5. Ensure Tesseract is accessible (update the path in `app/ocr_utils.py` if needed).
 
 ## Project Structure
 
 ```
-cv-genius/
-├── static/               # Static files (CSS, JS, images)
-│   ├── style.css         # Main stylesheet
-│   └── screenshot.png    # Application screenshot
-├── templates/            # HTML templates
-│   └── index.html        # Main application page
-├── main.py               # FastAPI application
-├── requirements.txt      # Python dependencies
-└── README.md             # Project documentation
+fastapi_career_app/
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # FastAPI app & template route
+│   ├── config.py            # Env loading & client setup
+│   ├── schemas.py           # Pydantic models & JSON Schemas
+│   ├── ocr_utils.py         # Tesseract + HF OCR helpers
+│   └── routers/
+│       ├── __init__.py
+│       ├── cv_router.py     # /process-cv/ endpoint
+│       └── profile_router.py# /generate endpoint with auto-validation
+├── templates/
+│   └── index.html           # Jinja2 form template
+├── static/
+│   └── style.css            # Custom styles
+├── requirements.txt
+└── README.md
 ```
 
-## Configuration
+## Usage
 
-You can configure the following in the `.env` file:
-
-| Variable          | Description                          | Default           |
-|-------------------|--------------------------------------|-------------------|
-| OPENAI_API_KEY    | Your OpenAI API key                  | -                 |
-| OPENAI_MODEL      | OpenAI model to use                  | gpt-3.5-turbo     |
-| TESSERACT_CMD     | Path to Tesseract executable         | System dependent  |
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- FastAPI for the excellent web framework
-- OpenAI for their powerful language models
-- Hugging Face for their OCR API
-- Tesseract OCR for text extraction
+Start the server from the project root:
+```bash
+uvicorn app.main:app --reload --port 8000
 ```
 
-This README includes:
-1. Project overview
-2. Key features
-3. Technology stack
-4. Installation instructions
-5. Usage guide
-6. API documentation
-7. Project structure
-8. Configuration options
-9. Contribution guidelines
-10. License information
-11. Acknowledgements
+- **GET /**
+  - Renders the main form (upload CV or fill in profile fields).
+  - Returns an HTML form.
 
-You can customize it further by:
-- Adding screenshots (replace the placeholder)
-- Including a demo video link
-- Adding badges for build status, license, etc.
-- Expanding the API documentation section
-- Adding deployment instructions for different platforms
+- **POST /process-cv/**
+  - Accepts a file (`multipart/form-data`).
+  - Returns a JSON object matching the `ProfileForm` schema.
+
+- **POST /generate**
+  - Accepts form fields: `name`, `experience`, `education`, `skills`, `contact`.
+  - Generates and validates a profile summary. Retries up to 2 times if validation fails.
+  - Returns a JSON object matching the `ProfileSummary` schema.
+
+## Example
+
+```bash
+# Generate summary from form data:
+curl -X POST http://127.0.0.1:8000/generate \
+  -F name="Jane Doe" \
+  -F experience="5 years in software engineering" \
+  -F education="BSc Computer Science" \
+  -F skills="Python, FastAPI, Docker" \
+  -F contact="jane@example.com"
+```
+
+Response:
+```json
+{
+  "summary": "...",
+  "reasoning": "...",
+  "tags": ["Backend Development", "API Design", "Cloud Engineering"],
+  "seo_keywords": ["FastAPI developer", "Python backend engineer"]
+}
+```
+
+## Logging
+
+- `INFO` logs for each call to generation and validation.
+- `DEBUG` logs for raw and parsed LLM outputs.
+- `WARNING` when validation fails and regeneration occurs.
+
+

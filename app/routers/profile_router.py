@@ -54,7 +54,7 @@ def _call_validate(summary_data: dict) -> List[ValidationItem]:
     logger.debug(f"Validation raw output: {raw}")
     data = json.loads(raw)
     items = [ValidationItem(**item) for item in data.get("results", [])]
-    logger.debug(f"Parsed validation items: {items}")
+    logger.info(f"Parsed validation items: {items}")
     return items
 
 @router.post("/generate", response_model=ProfileSummary)
