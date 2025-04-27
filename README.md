@@ -1,7 +1,5 @@
 # CV Genius - Professional Profile Generator
 
-![CV Genius Screenshot](static/screenshot.png)
-
 CV Genius is a web application that helps professionals transform their CVs into optimized LinkedIn profiles with SEO-friendly summaries and keywords. The application uses AI-powered text extraction and analysis to generate professional profile content.
 
 ## Features
