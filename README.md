@@ -1,6 +1,3 @@
-Here's a comprehensive README.md file for your CV Genius project:
-
-```markdown
 # CV Genius - Professional Profile Generator
 
 ![CV Genius Screenshot](static/screenshot.png)
@@ -38,11 +35,15 @@ CV Genius is a web application that helps professionals transform their CVs into
 - Tesseract OCR installed on your system
 - Node.js (for optional frontend development)
 
+### Pipeline
+
+![pipeline](pipeline.png)
+
 ### Setup
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/cv-genius.git
+   git clone https://github.com/RamiIbrahim2002/R-sum--automatique-de-profil-avec-IA-dans-le-cadre-du-projet-TYBSync--3-.git
    cd cv-genius
    ```
 
@@ -62,7 +63,6 @@ CV Genius is a web application that helps professionals transform their CVs into
    - Add your API keys:
      ```
      OPENAI_API_KEY=your_openai_key
-     HF_API_TOKEN=your_huggingface_token
      OPENAI_MODEL=gpt-3.5-turbo  # or your preferred model
      ```
 
@@ -75,7 +75,7 @@ CV Genius is a web application that helps professionals transform their CVs into
 
 1. Run the FastAPI server:
    ```bash
-   uvicorn main:app --reload
+   uvicorn main:app --reload --port 8000
    ```
 
 2. Open your browser and navigate to:
@@ -114,19 +114,8 @@ You can configure the following in the `.env` file:
 | Variable          | Description                          | Default           |
 |-------------------|--------------------------------------|-------------------|
 | OPENAI_API_KEY    | Your OpenAI API key                  | -                 |
-| HF_API_TOKEN      | Hugging Face API token               | -                 |
 | OPENAI_MODEL      | OpenAI model to use                  | gpt-3.5-turbo     |
 | TESSERACT_CMD     | Path to Tesseract executable         | System dependent  |
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Create a new Pull Request
 
 ## License
 
