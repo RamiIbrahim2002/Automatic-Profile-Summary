@@ -3,44 +3,145 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Générateur de résumé de profil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Genius | Générateur de Profil Professionnel</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
-  <div class="container">
-    <form id="cvForm" enctype="multipart/form-data">
-      <input type="file" id="cvUpload" accept="image/*,.pdf">
-      <button type="button" onclick="processCV()">Scan CV</button>
-    </form>
-    <h1>Profil</h1>
-    <form id="profileForm">
-      <label>Nom
-        <input type="text" name="name" required>
-      </label>
-      <label>Expérience professionnelle
-        <textarea name="experience" required></textarea>
-      </label>
-      <label>Éducation
-        <textarea name="education" required></textarea>
-      </label>
-      <label>Compétences & langues
-        <textarea name="skills" required></textarea>
-      </label>
-      <label>Coordonnées
-        <input type="text" name="contact" required>
-      </label>
-      <button type="submit">Générer résumé</button>
-    </form>
-    <div id="result">
-      <!-- Le JSON renvoyé s'affichera ici -->
-    </div>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+          </path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        <h1>CV Genius</h1>
+      </div>
+      <p class="tagline">Transformez votre CV en profil LinkedIn optimisé</p>
+    </header>
+    <main class="main-content">
+      <section class="upload-section card">
+        <h2 class="section-title">1. Importez votre CV</h2>
+        <form id="cvForm" enctype="multipart/form-data" class="upload-form">
+          <div class="file-upload-wrapper">
+            <input type="file" id="cvUpload" accept="image/*,.pdf" class="file-input">
+            <label for="cvUpload" class="file-upload-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span id="file-name">Choisir un fichier</span>
+            </label>
+          </div>
+          <button type="button" onclick="processCV()" class="btn btn-primary">
+            <span class="btn-text">Analyser le CV</span>
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </button>
+        </form>
+        <p class="file-requirements">Formats supportés : PDF, JPG, PNG (max 5MB)</p>
+      </section>
+      <section class="profile-section card">
+        <h2 class="section-title">2. Complétez votre profil</h2>
+        <form id="profileForm" class="profile-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Nom complet</label>
+              <input type="text" name="name" required class="form-input" placeholder="Prénom Nom">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Coordonnées</label>
+              <input type="text" name="contact" required class="form-input" placeholder="Email/Téléphone">
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Expérience professionnelle</label>
+              <textarea name="experience" required class="form-textarea" rows="4"
+                placeholder="Décrivez votre parcours professionnel..."></textarea>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Formation</label>
+              <textarea name="education" required class="form-textarea" rows="3"
+                placeholder="Listez vos diplômes et formations..."></textarea>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Compétences & langues</label>
+              <textarea name="skills" required class="form-textarea" rows="3"
+                placeholder="Compétences techniques, langues parlées..."></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-generate">
+            <span class="btn-text">Générer mon profil optimisé</span>
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 10 20 15 15 20"></polyline>
+              <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+            </svg>
+          </button>
+        </form>
+      </section>
+      <section id="result" class="result-section card hidden">
+        <div class="result-header">
+          <h2 class="section-title">3. Votre profil optimisé</h2>
+          <button class="btn-copy" onclick="copyToClipboard()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copier
+          </button>
+        </div>
+        <div class="result-content">
+          <div class="result-summary">
+            <h3 class="result-subtitle">Résumé professionnel</h3>
+            <div id="summary-content" class="result-text"></div>
+          </div>
+          <div class="result-tags">
+            <h3 class="result-subtitle">Mots-clés recommandés</h3>
+            <div id="tags-content" class="tags-container"></div>
+          </div>
+          <div class="result-analysis">
+            <h3 class="result-subtitle">Analyse</h3>
+            <div id="reasoning-content" class="result-text"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <p>© 2023 CV Genius. Tous droits réservés.</p>
+      <div class="footer-links">
+        <a href="#">Conditions d'utilisation</a>
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">Contact</a>
+      </div>
+    </footer>
   </div>
   <script>
+    // Update file name display
+    document.getElementById('cvUpload').addEventListener('change', function (e) {
+      const fileName = e.target.files[0]?.name || 'Choisir un fichier';
+      document.getElementById('file-name').textContent = fileName;
+    });
+
     // Process CV form
     async function processCV() {
       const fileInput = document.getElementById('cvUpload');
-      if (!fileInput.files.length) return;
+      if (!fileInput.files.length) {
+        showError('Veuillez sélectionner un fichier');
+        return;
+      }
 
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
@@ -49,12 +150,17 @@
         // Show loading state
         const button = document.querySelector('#cvForm button');
         button.disabled = true;
-        button.textContent = 'Traitement...';
+        button.innerHTML = '<span class="btn-text">Analyse en cours...</span><div class="spinner"></div>';
 
         const response = await fetch('/process-cv/', {
           method: 'POST',
           body: formData
         });
+
+        if (!response.ok) {
+          throw new Error(await response.text() || 'Erreur lors du scan du CV');
+        }
+
         const data = await response.json();
 
         // Auto-fill form fields
@@ -64,16 +170,19 @@
         document.querySelector("#profileForm textarea[name='skills']").value = data.skills || '';
         document.querySelector("#profileForm input[name='contact']").value = data.contact || '';
 
+        // Show success message
+        showSuccess('CV analysé avec succès!');
+
       } catch (error) {
         console.error('Error:', error);
-        document.getElementById("result").innerHTML = `
-          <p class="error">Erreur lors du scan du CV: ${error.message}</p>
-        `;
+        showError(`Erreur: ${error.message}`);
       } finally {
         // Reset button state
         const button = document.querySelector('#cvForm button');
-        button.disabled = false;
-        button.textContent = 'Scan CV';
+        if (button) {
+          button.disabled = false;
+          button.innerHTML = '<span class="btn-text">Analyser le CV</span><svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>';
+        }
       }
     }
 
@@ -85,7 +194,7 @@
         // Show loading state
         const button = this.querySelector('button[type="submit"]');
         button.disabled = true;
-        button.textContent = 'Génération en cours...';
+        button.innerHTML = '<span class="btn-text">Génération en cours...</span><div class="spinner"></div>';
 
         const formData = new FormData(this);
         const response = await fetch('/generate', {
@@ -93,37 +202,86 @@
           body: formData
         });
 
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+          throw new Error(await response.text() || 'Erreur lors de la génération');
+        }
 
         const data = await response.json();
 
-        // Update the result div
-        document.getElementById("result").innerHTML = `
-          <h2>Résumé</h2>
-          <p>${data.summary}</p>
-          <h3>Raisonnement</h3>
-          <p>${data.reasoning}</p>
-          <h3>Tags suggérés</h3>
-          <ul>${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>
-        `;
+        // Display results
+        document.getElementById("summary-content").innerHTML = `<p>${data.summary}</p>`;
+        document.getElementById("reasoning-content").innerHTML = `<p>${data.reasoning}</p>`;
+        document.getElementById("tags-content").innerHTML = data.tags.map(t =>
+          `<span class="tag">${t}</span>`
+        ).join('');
+
+        // Show result section
+        document.getElementById("result").classList.remove("hidden");
 
         // Scroll to results
         document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
 
+        // Show success message
+        showSuccess('Profil généré avec succès!');
+
       } catch (error) {
         console.error('Error:', error);
-        document.getElementById("result").innerHTML = `
-          <p class="error">Erreur lors de la génération: ${error.message}</p>
-        `;
+        showError(`Erreur: ${error.message}`);
       } finally {
         // Reset button state
         const button = document.querySelector('#profileForm button[type="submit"]');
         if (button) {
           button.disabled = false;
-          button.textContent = 'Générer résumé';
+          button.innerHTML = '<span class="btn-text">Générer mon profil optimisé</span><svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>';
         }
       }
     });
+
+    // Copy to clipboard function
+    function copyToClipboard() {
+      const resultContent = document.getElementById("result-content").innerText;
+      navigator.clipboard.writeText(resultContent)
+        .then(() => {
+          const copyBtn = document.querySelector('.btn-copy');
+          copyBtn.textContent = 'Copié!';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copier';
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+    }
+
+    // Helper functions for notifications
+    function showError(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification error';
+      notification.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>${message}</span>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 5000);
+    }
+
+    function showSuccess(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification success';
+      notification.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span>${message}</span>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
   </script>
 </body>
 
