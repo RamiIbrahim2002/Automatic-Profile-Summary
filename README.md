@@ -16,7 +16,6 @@ CV Genius is a web application that helps professionals transform their CVs into
   - Python
   - FastAPI (web framework)
   - OpenAI API (text generation)
-  - Hugging Face (OCR fallback)
   - Tesseract OCR (text extraction)
   - PDF2Image (PDF processing)
 
