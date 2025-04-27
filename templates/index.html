@@ -1,3 +1,4 @@
+<!-- filepath: d:\pc\R-sum--automatique-de-profil-avec-IA-dans-le-cadre-du-projet-TYBSync--3--main\Rsum-projet-TYBSync--3\R-sum--automatique-de-profil-avec-IA-dans-le-cadre-du-projet-TYBSync--3-\templates\index.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,7 +30,21 @@
     <div id="result">
       <!-- Le JSON renvoyé s’affichera ici -->
     </div>
+
+    <!-- OCR Section -->
+    <div class="ocr-container">
+      <h2>OCR Extraction</h2>
+      <form id="ocr-form">
+        <label for="ocr-file">Upload an image:</label>
+        <input type="file" id="ocr-file" name="file" accept="image/*" required>
+        <button type="submit">Extract Text</button>
+      </form>
+      <div id="ocr-result">
+        <!-- The extracted text will be displayed here -->
+      </div>
+    </div>
   </div>
+
   <script>
     const form = document.querySelector('form');
     const resultDiv = document.getElementById('result');
@@ -37,19 +52,64 @@
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const formData = new FormData(form);
-      const resp = await fetch('/generate', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await resp.json();
-      resultDiv.innerHTML = `
-        <h2>Résumé</h2>
-        <p>${data.summary}</p>
-        <h3>Raisonnement</h3>
-        <p>${data.reasoning}</p>
-        <h3>Tags suggérés</h3>
-        <ul>${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>
-      `;
+      try {
+        const resp = await fetch('/generate', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!resp.ok) {
+          throw new Error(`HTTP error! status: ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        resultDiv.innerHTML = `
+          <h2>Résumé</h2>
+          <p>${data.summary}</p>
+          <h3>Raisonnement</h3>
+          <p>${data.reasoning}</p>
+          <h3>Tags suggérés</h3>
+          <ul>${data.tags.map(t => `<li>${t}</li>`).join('')}</ul>
+          <h3>SEO Keywords:</h3>
+          <ul>${data.seo_keywords.map(k => `<li>${k}</li>`).join('')}</ul>
+        `;
+      } catch (error) {
+        resultDiv.innerHTML = `<p>Une erreur s'est produite : ${error.message}</p>`;
+      }
+    });
+
+    // OCR Form Handling
+    const ocrForm = document.getElementById('ocr-form');
+    const ocrResultDiv = document.getElementById('ocr-result');
+
+    ocrForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('ocr-file');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        ocrResultDiv.innerHTML = '<p>Please select a file.</p>';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch('/ocr', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        ocrResultDiv.innerHTML = `<h3>Extracted Text:</h3><p>${data.text}</p>`;
+      } catch (error) {
+        ocrResultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+      }
     });
   </script>
 </body>
