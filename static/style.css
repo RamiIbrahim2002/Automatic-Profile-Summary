@@ -235,7 +235,7 @@ body {
 }
 
 .result-section {
-  display: none;
+  display: block;
 }
 
 .result-section.hidden {
