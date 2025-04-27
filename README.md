@@ -114,16 +114,6 @@ You can configure the following in the `.env` file:
 | OPENAI_MODEL      | OpenAI model to use                  | gpt-3.5-turbo     |
 | TESSERACT_CMD     | Path to Tesseract executable         | System dependent  |
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- FastAPI for the excellent web framework
-- OpenAI for their powerful language models
-- Hugging Face for their OCR API
-- Tesseract OCR for text extraction
 ```
 
 This README includes:
